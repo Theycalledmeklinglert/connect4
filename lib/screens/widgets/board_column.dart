@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
-
 import '../../controllers/game_controller.dart';
 import 'cell.dart';
 
@@ -10,25 +9,19 @@ class BoardColumn extends StatelessWidget {
 
   BoardColumn({
     Key? key,
-    required this.coinsInColumn;,
+    required this.coinsInColumn,
   }) : super(key: key);
 
   List<Cell> _buildBoardColumn() {
-    return coinsInColumn.map((chips) => Cell()).toList();
+    print(coinsInColumn.length);
+    return coinsInColumn.map((chip) => Cell()).toList();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+      return Column(
       mainAxisSize: MainAxisSize.min,
-      children: [
-        Cell(),
-        Cell(),
-        Cell(),
-        Cell(),
-        Cell(),
-        Cell(),
-      ],
+      children: _buildBoardColumn(),
     );
   }
 }

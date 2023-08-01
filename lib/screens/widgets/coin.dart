@@ -14,8 +14,8 @@ class Coin extends StatelessWidget {
     return Container(
       height: 35,
       width: 35,
-      decoration: BoxDecoration(borderRadius: BorderRadius.circular(32), color: coinColor),
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(32), color: coinColor),
     );
   }
 }
-

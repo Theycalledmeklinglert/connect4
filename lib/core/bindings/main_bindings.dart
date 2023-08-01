@@ -8,5 +8,4 @@ class MainBindings extends Bindings {
   void dependencies() {
     Get.lazyPut<GameController>(() => GameController());
   }
-
 }
