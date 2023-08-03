@@ -2,6 +2,8 @@ import 'package:get/get.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 
+import '../screens/widgets/cell.dart';
+
 class GameController extends GetxController {
   RxList<List<int>> _board = RxList<List<int>>();
   List<List<int>> get board => _board.value;
@@ -38,14 +40,28 @@ class GameController extends GetxController {
 
       int horizontalWinCond = checkForHorizontalWin(columnNumber);
       int verticalWinCond = checkForVerticalWin(columnNumber);
+      int diagonalWinCond = checkDiagonalWinCond(columnNumber);
       print("Horizontal Winner: $horizontalWinCond");
       print("Vertical Winner: $verticalWinCond");
 
+      int winner = (horizontalWinCond != 0) ? horizontalWinCond : (verticalWinCond != 0) ? verticalWinCond : (diagonalWinCond != 0) ? diagonalWinCond : 0;
+
+      if(winner != 0) {
+        declareWinner(winner);
+      }
     }
     else {
       Get.snackbar("Not available", "This column is full already",
           snackPosition: SnackPosition.BOTTOM);
     }
+  }
+
+  void declareWinner(int winner) {
+    Get.defaultDialog(
+        title: winner == 1 ? 'YELLOW WON' : 'RED WON',
+        content: Cell(
+          currCellState: winner == 1 ? CellState.YELLOW : CellState.RED,
+        )).then((value) => _buildBoard());
   }
 
   int checkForVerticalWin(int columnNumber) {
@@ -95,4 +111,72 @@ class GameController extends GetxController {
 
     return rowEntries;
   }
+
+  int checkDiagonalWinCond(int columnNumber) {
+    int columnMax = 6; //max indices of the lists representing the field
+    int rowMax = 5;    //max indices of the lists representing the field
+    int rowIndex = (board[columnNumber].length - 1) - board[columnNumber].reversed.toList().indexWhere((cell) => cell != 0);
+
+    List<int> upwardsDiagonal = getUpwardsDiagonalAsList(columnNumber, rowIndex, columnMax, rowMax);
+    List<int> downwardsDiagonal = getDownwardsDiagonalAsList(columnNumber, rowIndex, columnMax, rowMax);
+
+
+    return 0;
+  }
+
+  List<int> getDownwardsDiagonalAsList(int columnNumber, int rowIndex, int columnMax, int rowMax) {
+    List<int> downwardsDiagonal = [board[columnNumber][rowIndex]];
+    int colCounter = columnNumber;
+    int rowCounter = rowIndex;
+
+    colCounter = columnNumber;
+    rowCounter = rowIndex ;
+    while(colCounter > 0 && rowCounter < rowMax) {            //links oben
+      colCounter--;
+      rowCounter++;
+      List<int> curColumn = board[colCounter];
+      downwardsDiagonal.add(curColumn[rowCounter]);
+    }
+
+    colCounter = columnNumber;
+    rowCounter = rowIndex ;
+    while(colCounter < columnMax && rowCounter > 0) {            //rechts unten
+      colCounter++;
+      rowCounter--;
+      List<int> curColumn = board[colCounter];
+      downwardsDiagonal.add(curColumn[rowCounter]);
+    }
+
+    print("DownardsDiagonal: $downwardsDiagonal");
+
+    return downwardsDiagonal;
+  }
+
+    List<int> getUpwardsDiagonalAsList(int columnNumber, int rowIndex, int columnMax, int rowMax) {
+    List<int> upwardsDiagonal = [board[columnNumber][rowIndex]];
+
+    int colCounter = columnNumber;
+    int rowCounter = rowIndex;
+    while(colCounter < columnMax && rowCounter < rowMax) {  //rechts oben
+      colCounter++;
+      rowCounter++;
+      List<int> curColumn = board[colCounter];
+      upwardsDiagonal.add(curColumn[rowCounter]);
+    }
+
+    colCounter = columnNumber;
+    rowCounter = rowIndex ;
+    while(colCounter > 0 && rowCounter > 0) {               //links unten
+      colCounter--;
+      rowCounter--;
+      List<int> curColumn = board[colCounter];
+      upwardsDiagonal.add(curColumn[rowCounter]);
+    }
+
+    print("UpwardsDiagonal: $upwardsDiagonal");
+
+    return upwardsDiagonal;
+  }
+
+
 }
