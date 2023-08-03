@@ -8,12 +8,14 @@ class Board extends StatelessWidget {
   final GameController gameController = Get.find<GameController>();
 
   List<BoardColumn> _buildBoard() {
-    return gameController
-        .board
-        .map( (boardColumn) => BoardColumn(coinsInColumn: boardColumn) )
+    int currentColNumber = 0;
+    return gameController.board
+        .map((boardColumn) => BoardColumn(
+              coinsInColumn: boardColumn,
+              columnNumber: currentColNumber++,
+            ))
         .toList();
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -45,9 +47,11 @@ class Board extends StatelessWidget {
                 mainAxisSize: MainAxisSize.max,
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                   Row(
+                  GetBuilder<GameController>(
+                    builder: (GetxController gameController) => Row(
                       children: _buildBoard(),
                     ),
+                  ),
                 ],
               ),
             ],
@@ -56,5 +60,4 @@ class Board extends StatelessWidget {
       ],
     );
   }
-
 }
