@@ -37,7 +37,10 @@ class GameController extends GetxController {
       update();
 
       int horizontalWinCond = checkForHorizontalWin(columnNumber);
-      print("Winner: $horizontalWinCond");
+      int verticalWinCond = checkForVerticalWin(columnNumber);
+      print("Horizontal Winner: $horizontalWinCond");
+      print("Vertical Winner: $verticalWinCond");
+
     }
     else {
       Get.snackbar("Not available", "This column is full already",
@@ -45,22 +48,32 @@ class GameController extends GetxController {
     }
   }
 
+  int checkForVerticalWin(int columnNumber) {
+    List<int> column = board[columnNumber];
+    return checkForConsecutiveNumber(column);
+  }
+
   int checkForHorizontalWin(int columnNumber) {
     int consecutiveYellows = 0;
     int consecutiveReds = 0;
     List<int> rowEntries = getRowAsList(columnNumber);
+    return checkForConsecutiveNumber(rowEntries);
+  }
 
-    for (var i = 0; i < rowEntries.length; i++) {
-      if (rowEntries[i] == 1) {
+  int checkForConsecutiveNumber(List<int> list) {
+    int consecutiveYellows = 0;
+    int consecutiveReds = 0;
+
+    for (var i = 0; i < list.length; i++) {
+      if (list[i] == 1) {
         consecutiveYellows++;
         consecutiveReds = 0;
       }
-      else if (rowEntries[i] == 2) {
+      else if (list[i] == 2) {
         consecutiveReds++;
         consecutiveYellows = 0;
       }
     }
-
     if(consecutiveYellows >= 4) {
       return 1;
     }
