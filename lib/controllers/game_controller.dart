@@ -58,7 +58,7 @@ class GameController extends GetxController {
 
   void declareWinner(int winner) {
     Get.defaultDialog(
-        title: winner == 1 ? 'YELLOW WON' : 'RED WON',
+        title: winner == 1 ? 'Player 1 (yellow) won' : 'Player 2 (red) won',
         content: Cell(
           currCellState: winner == 1 ? CellState.YELLOW : CellState.RED,
         )).then((value) => _buildBoard());
@@ -81,12 +81,19 @@ class GameController extends GetxController {
     int consecutiveReds = 0;
 
     for (var i = 0; i < list.length; i++) {
+      if(consecutiveYellows >= 4 || consecutiveReds >= 4) {
+        break;
+      }
       if (list[i] == 1) {
         consecutiveYellows++;
         consecutiveReds = 0;
       }
       else if (list[i] == 2) {
         consecutiveReds++;
+        consecutiveYellows = 0;
+      }
+      else {
+        consecutiveReds = 0;
         consecutiveYellows = 0;
       }
     }
@@ -120,8 +127,7 @@ class GameController extends GetxController {
     List<int> upwardsDiagonal = getUpwardsDiagonalAsList(columnNumber, rowIndex, columnMax, rowMax);
     List<int> downwardsDiagonal = getDownwardsDiagonalAsList(columnNumber, rowIndex, columnMax, rowMax);
 
-
-    return 0;
+    return checkForConsecutiveNumber(upwardsDiagonal) != 0 ? checkForConsecutiveNumber(upwardsDiagonal) : checkForConsecutiveNumber(downwardsDiagonal);
   }
 
   List<int> getDownwardsDiagonalAsList(int columnNumber, int rowIndex, int columnMax, int rowMax) {
@@ -135,7 +141,7 @@ class GameController extends GetxController {
       colCounter--;
       rowCounter++;
       List<int> curColumn = board[colCounter];
-      downwardsDiagonal.add(curColumn[rowCounter]);
+      downwardsDiagonal.insert(0, curColumn[rowCounter]);
     }
 
     colCounter = columnNumber;
@@ -170,7 +176,7 @@ class GameController extends GetxController {
       colCounter--;
       rowCounter--;
       List<int> curColumn = board[colCounter];
-      upwardsDiagonal.add(curColumn[rowCounter]);
+      upwardsDiagonal.insert(0, curColumn[rowCounter]);
     }
 
     print("UpwardsDiagonal: $upwardsDiagonal");
