@@ -1,6 +1,5 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_rx/src/rx_types/rx_types.dart';
-import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 
 import '../screens/widgets/cell.dart';
 
@@ -49,11 +48,52 @@ class GameController extends GetxController {
       if(winner != 0) {
         declareWinner(winner);
       }
+
+      if(checkForFullBoard() == 1) {
+        int fB = checkForFullBoard();
+        print("FullBoard: $fB");
+        showFullBoardDialog();
+      }
     }
     else {
       Get.snackbar("Not available", "This column is full already",
           snackPosition: SnackPosition.BOTTOM);
     }
+  }
+
+  void showFullBoardDialog() {
+    final RxBool buttonVisible = true.obs;
+    final GlobalKey<State> _dialogKey = GlobalKey<State>();
+
+    Get.dialog(
+      AlertDialog(
+        key: _dialogKey,
+        title: Text('Draw'),
+        content: Obx(
+              () => buttonVisible.value
+              ? TextButton(
+            onPressed: () {
+              _buildBoard();
+              buttonVisible.value = false;
+              Get.back(id: _dialogKey.currentContext!.hashCode);
+            },
+            child: Text('OK'),
+          )
+              : SizedBox(),
+        ),
+      ),
+    );
+      }
+
+  int checkForFullBoard() {
+    for (List<int> elem in board) {
+      for (int cell in elem) {
+        if (cell == 0) {
+          return 0;
+        }
+      }
+    }
+    return 1;
   }
 
   void declareWinner(int winner) {
@@ -70,8 +110,6 @@ class GameController extends GetxController {
   }
 
   int checkForHorizontalWin(int columnNumber) {
-    int consecutiveYellows = 0;
-    int consecutiveReds = 0;
     List<int> rowEntries = getRowAsList(columnNumber);
     return checkForConsecutiveNumber(rowEntries);
   }
