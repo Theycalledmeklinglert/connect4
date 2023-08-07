@@ -12,10 +12,10 @@ class Coin extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 35,
-      width: 35,
+      height: 90,
+      width: 90,
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(32), color: coinColor),
+          borderRadius: BorderRadius.circular(80), color: coinColor),
     );
   }
 }

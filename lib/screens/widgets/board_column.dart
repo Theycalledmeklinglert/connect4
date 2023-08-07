@@ -33,6 +33,7 @@ class BoardColumn extends StatelessWidget {
         },
         child: Column(
           mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: _buildBoardColumn(),
         ));
   }

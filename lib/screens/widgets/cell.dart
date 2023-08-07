@@ -38,7 +38,7 @@ class Cell extends StatelessWidget {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        Container(height: 50, width: 50, color: Colors.blue),
+        Container(height: 109, width: 130, color: Colors.blue),
         Positioned.fill(
             child: Align(
           alignment: Alignment.center,
